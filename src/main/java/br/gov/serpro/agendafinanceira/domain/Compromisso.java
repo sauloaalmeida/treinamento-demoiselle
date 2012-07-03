@@ -40,6 +40,15 @@ public class Compromisso  implements Serializable {
 	
 	public Compromisso() {
 	}
+	
+	public Compromisso(String nomeCompromisso, Date dataVencimento, Date dataPagamento,
+			BigDecimal valorCompromisso, BigDecimal valorPago) {
+		this.nomeCompromisso = nomeCompromisso;
+		this.dataVencimento = dataVencimento;
+		this.dataPagamento = dataPagamento;
+		this.valorCompromisso = valorCompromisso;
+		this.valorPago = valorPago;
+	}	
 
 	public Compromisso(Long id, String nomeCompromisso, Date dataVencimento, Date dataPagamento,
 			BigDecimal valorCompromisso, BigDecimal valorPago) {
@@ -55,14 +64,25 @@ public class Compromisso  implements Serializable {
 		
 		Date agora = new Date();
 		
-		if(agora.getTime() <= dataVencimento.getTime()) {
-			return false;	
-		}else {
-		
+		//se nao tiver vencido ainda, nao esta atrasado 
+		if(dataVencimento.getTime() >= agora.getTime()) {
+			return false;
+		//se ja passou a data de vencimento
+		//e nao tem registro de pagamento, esta atrasado
+		}else if(dataPagamento == null) {
 			return true;
-		}		
+		//se ja passou a data de vencimento	
+		//mas foi pago antes do vencimento, nao esta atrasado	
+		}else if(dataPagamento.getTime() <= dataVencimento.getTime()) {
+			return false;
+		//se ja passou a data de vencimento	
+		//mas foi pago antes do vencimento foi pago atrasado, esta atrasado
+		}else if(dataPagamento.getTime() > dataVencimento.getTime()) {
+			return true;
+		}				
 		
-		
+		//qualquer outra situacao esta atrasado
+		return true;
 	}
 
 	
