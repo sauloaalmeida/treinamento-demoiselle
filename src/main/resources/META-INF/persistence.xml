@@ -9,6 +9,7 @@
 		<non-jta-data-source>java:/DefaultDS</non-jta-data-source>
 		
 		<class>br.gov.serpro.agendafinanceira.domain.Bookmark</class>
+		<class>br.gov.serpro.agendafinanceira.domain.Compromisso</class>
 
 		<properties>
 			<property name="hibernate.show_sql" value="true" />
