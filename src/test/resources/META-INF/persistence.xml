@@ -7,7 +7,6 @@
 	-->
 	<persistence-unit name="bookmark-ds" transaction-type="RESOURCE_LOCAL">
 
-		<class>br.gov.serpro.agendafinanceira.domain.Bookmark</class>
 		<class>br.gov.serpro.agendafinanceira.domain.Compromisso</class>
 
 		<properties>

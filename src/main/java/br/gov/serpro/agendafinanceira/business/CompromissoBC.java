@@ -2,6 +2,7 @@ package br.gov.serpro.agendafinanceira.business;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,7 +55,7 @@ public class CompromissoBC extends DelegateCrud<Compromisso, Long, CompromissoDA
 				
 		if (findAll().isEmpty()) {
 			insert(new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100")));
-			insert(new Compromisso("Gas",ontem,antesOntem,new BigDecimal("566"),new BigDecimal("566")));
+			insert(new Compromisso("Gas",antesOntem,ontem,new BigDecimal("566"),new BigDecimal("566")));
 			insert(new Compromisso("Agua",ontem,antesOntem,new BigDecimal("230"),new BigDecimal("230")));
 			insert(new Compromisso("Cartao Visa",ontem,antesOntem,new BigDecimal("1050"),new BigDecimal("1050")));
 			insert(new Compromisso("Cartao Master",ontem,antesOntem,new BigDecimal("2368"),new BigDecimal("2368")));
@@ -64,8 +65,13 @@ public class CompromissoBC extends DelegateCrud<Compromisso, Long, CompromissoDA
 	
 	@Override
 	public void insert(Compromisso compromisso) {
+		
+		//se tiver compromisso duplicado
+		if(verificaCompromissoDupicado(compromisso)) {
+			throw new CompromissoDuplicadoException(bundle.getString("compromisso.duplicado.exception", compromisso.getNomeCompromisso()));
+		}
 	
-		validaRegrasInsercaoUpdate(compromisso);
+		verificaValorMinimo(compromisso);
 		
 		//se chegou ate aqui insere o bean
 		super.insert(compromisso);
@@ -82,9 +88,8 @@ public class CompromissoBC extends DelegateCrud<Compromisso, Long, CompromissoDA
 	
 	@Override
 	public void update(Compromisso compromisso) {
-		
-
-		validaRegrasInsercaoUpdate(compromisso);
+				
+		verificaValorMinimo(compromisso);
 		
 		//se chegou ate aqui insere o bean
 		super.update(compromisso);
@@ -105,13 +110,8 @@ public class CompromissoBC extends DelegateCrud<Compromisso, Long, CompromissoDA
             logger.error(bundle.getString("compromisso.insert.exception"));
     }
 
-	private void validaRegrasInsercaoUpdate(Compromisso compromisso) {
-		
-		//se tiver compromisso duplicado
-		if(verificaCompromissoDupicado(compromisso)) {
-			throw new CompromissoDuplicadoException(bundle.getString("compromisso.duplicado.exception", compromisso.getNomeCompromisso()));
-		}
-		
+	private void verificaValorMinimo(Compromisso compromisso) {
+				
 		//verifica se o valor esta acima do limite minimo
 		if(compromisso.getValorCompromisso().compareTo(new BigDecimal(String.valueOf(config.getValorMinimo()))) < 0) {
 			throw new CompromissoValorMinimoException(bundle.getString("compromisso.valor.minimo.exception", compromisso.getNomeCompromisso(), compromisso.getValorCompromisso(),config.getValorMinimo()));
@@ -123,5 +123,10 @@ public class CompromissoBC extends DelegateCrud<Compromisso, Long, CompromissoDA
     private boolean verificaCompromissoDupicado(Compromisso compromisso) {
 		return (compromissoDao.findByNome(compromisso).size() > 0);
 	}
+    
+    List<Compromisso> findByNome(Compromisso compromisso){
+    	return compromissoDao.findByNome(compromisso);
+    }
+    
 	
 }

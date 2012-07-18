@@ -1,7 +1,6 @@
 package br.gov.serpro.agendafinanceira.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,13 +21,13 @@ import br.gov.serpro.agendafinanceira.exception.CompromissoDuplicadoException;
 import br.gov.serpro.agendafinanceira.exception.CompromissoValorMinimoException;
 
 @RunWith(DemoiselleRunner.class)
-public class CompromissoBCTest {
-	
+public class AgendaFinanceiraBCTest {
+
 	@Inject
 	private EntityManager em;
 	
 	@Inject
-	private CompromissoBC compromissoBC;
+	private AgendaFinanceiraBC agendaFinanceiraBC;
 	
 	@Inject 
 	private CompromissoConfig config;
@@ -52,8 +51,8 @@ public class CompromissoBCTest {
 	
 	@Test
 	public void testLoad() {
-		compromissoBC.load();
-		List<Compromisso> listaCompromissos = compromissoBC.findAll();
+		agendaFinanceiraBC.load();
+		List<Compromisso> listaCompromissos = agendaFinanceiraBC.findAll();
 		assertNotNull(listaCompromissos);
 		assertEquals(5, listaCompromissos.size());
 	}
@@ -61,8 +60,8 @@ public class CompromissoBCTest {
 	@Test
 	public void testInsertSucesso() {
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100"));
-		compromissoBC.insert(compromisso);
-		List<Compromisso> listaCompromissos = compromissoBC.findAll();
+		agendaFinanceiraBC.insert(compromisso);
+		List<Compromisso> listaCompromissos = agendaFinanceiraBC.findAll();
 		assertNotNull(listaCompromissos);
 		assertEquals(1, listaCompromissos.size());
 	}
@@ -74,7 +73,7 @@ public class CompromissoBCTest {
 		BigDecimal menorValorMinimo = valorMinimo.subtract(new BigDecimal("1"));
 		
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,menorValorMinimo,menorValorMinimo);
-		compromissoBC.insert(compromisso);
+		agendaFinanceiraBC.insert(compromisso);
 	}
 	
 	@Test(expected=CompromissoDuplicadoException.class)
@@ -82,38 +81,38 @@ public class CompromissoBCTest {
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100"));
 		Compromisso compromisso2 = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("190"),new BigDecimal("190"));
 		
-		compromissoBC.insert(compromisso);
-		compromissoBC.insert(compromisso2);
+		agendaFinanceiraBC.insert(compromisso);
+		agendaFinanceiraBC.insert(compromisso2);
 	}		
 	
 	@Test
 	public void testDelete() {
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100"));
-		compromissoBC.insert(compromisso);
+		agendaFinanceiraBC.insert(compromisso);
 		
-		List<Compromisso> listaCompromissos = compromissoBC.findAll();
+		List<Compromisso> listaCompromissos = agendaFinanceiraBC.findAll();
 		assertNotNull(listaCompromissos);
 		assertEquals(1, listaCompromissos.size());
 		
-		compromissoBC.delete(compromisso.getId());
-		listaCompromissos = compromissoBC.findAll();
+		agendaFinanceiraBC.delete(compromisso.getId());
+		listaCompromissos = agendaFinanceiraBC.findAll();
 		assertEquals(0, listaCompromissos.size());
 	}
 	
 	@Test
 	public void testUpdateSucesso() {
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100"));
-		compromissoBC.insert(compromisso);
+		agendaFinanceiraBC.insert(compromisso);
 		
-		List<Compromisso> listaCompromissos = compromissoBC.findAll();
+		List<Compromisso> listaCompromissos = agendaFinanceiraBC.findAll();
 		Compromisso compromisso2 = (Compromisso)listaCompromissos.get(0);
 		assertNotNull(listaCompromissos);
 		assertEquals("Luz", compromisso2.getNomeCompromisso());
 		
 		compromisso2.setNomeCompromisso("Gas");
-		compromissoBC.update(compromisso2);
+		agendaFinanceiraBC.update(compromisso2);
 		
-		listaCompromissos = compromissoBC.findAll();
+		listaCompromissos = agendaFinanceiraBC.findAll();
 		Compromisso compromisso3 = (Compromisso)listaCompromissos.get(0);
 		assertEquals("Gas", compromisso3.getNomeCompromisso());
 	}
@@ -121,9 +120,9 @@ public class CompromissoBCTest {
 	@Test(expected=CompromissoValorMinimoException.class)
 	public void testUpdateErroValorMinimo() {
 		Compromisso compromisso = new Compromisso("Luz",ontem,antesOntem,new BigDecimal("100"),new BigDecimal("100"));
-		compromissoBC.insert(compromisso);
+		agendaFinanceiraBC.insert(compromisso);
 		
-		List<Compromisso> listaCompromissos = compromissoBC.findAll();
+		List<Compromisso> listaCompromissos = agendaFinanceiraBC.findAll();
 		Compromisso compromisso2 = (Compromisso)listaCompromissos.get(0);
 		assertNotNull(listaCompromissos);
 		assertEquals("Luz", compromisso2.getNomeCompromisso());
@@ -132,8 +131,9 @@ public class CompromissoBCTest {
 		BigDecimal menorValorMinimo = valorMinimo.subtract(new BigDecimal("1"));
 		
 		compromisso2.setValorCompromisso(menorValorMinimo);
-		compromissoBC.update(compromisso2);
+		agendaFinanceiraBC.update(compromisso2);
 	}
 		
+
 
 }

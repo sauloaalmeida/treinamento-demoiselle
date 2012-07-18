@@ -33,5 +33,9 @@ public class AgendaFinanceiraBC {
 	public Compromisso load(Long id) {
 		return compromissoBC.load(id);
 	}
+	
+	public void load() {
+		compromissoBC.load();
+	}
 
 }

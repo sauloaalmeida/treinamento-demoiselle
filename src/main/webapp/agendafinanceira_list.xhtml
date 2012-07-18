@@ -51,9 +51,28 @@
 						<h:outputText value="#{bean.dataPagamento}" />
 						<f:param name="id" value="#{bean.id}" />
 					</h:commandLink>
-				</p:column>				
-	valorCompromisso
-	valorPago
+				</p:column>
+				<p:column sortBy="#{bean.valorCompromisso}">
+					<f:facet name="header">#{messages['agendafinanceira.label.valorCompromisso']}</f:facet>
+					<h:commandLink action="#{agendaFinanceiraListMB.getNextView}" actionListener="#{agendaFinanceiraListMB.clear}">
+						<h:outputText value="#{bean.valorCompromisso}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>	
+				<p:column sortBy="#{bean.valorPago}">
+					<f:facet name="header">#{messages['agendafinanceira.label.valorPago']}</f:facet>
+					<h:commandLink action="#{agendaFinanceiraListMB.getNextView}" actionListener="#{agendaFinanceiraListMB.clear}">
+						<h:outputText value="#{bean.valorPago}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>		
+				<p:column sortBy="#{bean.atrasado}">
+					<f:facet name="header">#{messages['agendafinanceira.label.atrasado']}</f:facet>
+					<h:commandLink action="#{agendaFinanceiraListMB.getNextView}" actionListener="#{agendaFinanceiraListMB.clear}">
+						<h:outputText value="#{bean.atrasado}" />
+						<f:param name="id" value="#{bean.id}" />
+					</h:commandLink>
+				</p:column>									
 			</p:dataTable>
 		</h:form>
 	</ui:define>
